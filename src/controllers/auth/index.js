@@ -46,13 +46,7 @@ export const register = {
         lastName,
         email,
       });
-      const targetSlugCount = await User.find({slug:`${name}-${lastName}`}).count()
-      console.log("targetSlugCount", targetSlugCount)
-      if(targetSlugCount > 0){
-        newUser.slug = `${name.split(" ").join("-")}-${lastName.split(" ").join("-")}.${targetSlugCount + 1}`
-      }else{
-        newUser.slug = `${name.split(" ").join("-")}-${lastName.split(" ").join("-")}`
-      }
+      
       if (files && files.image) {
         try {
           const imageUrl = await cloudinary.uploader.upload(
@@ -97,7 +91,6 @@ export const login = {
         message: "Usuario no encontrado",
       });
     }
-    console.log("")
     if (!bcript.compareSync(password, targetUser.password)) {
       return res.status(404).json({
         ok: false,
@@ -111,17 +104,3 @@ export const login = {
     });
   },
 };
-
-export const me = {
-  do: async (req, res, next) => {
-    const { uid } = req;
-
-    const targetUser = await User.findById(uid)
-    console.log("target user", targetUser)
-    targetUser.fallow = targetUser.fallow.length;
-    targetUser.fallowers = targetUser.fallowers.length;
-    targetUser.blogs = targetUser.blogs.length
-    res.json({data:targetUser})
-
-  }
-}
