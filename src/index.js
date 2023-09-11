@@ -6,6 +6,7 @@ import http from "http";
 import { dbConnection } from "./db/index.js";
 import dotenv from "dotenv";
 import authRoutes from "./routes/auth/index.js";
+import postsRoutes from "./routes/posts/index.js";
 import { errorHandler } from "./middleware/errorHandler/error-handler.js";
 
 const app = express();
@@ -13,7 +14,7 @@ const app = express();
 dotenv.config();
 const corsOptions = {
   //To allow requests from client
-  origin: ["http://localhost:3000", "http://127.0.0.1"],
+  origin: ["http://localhost:3000", "http://127.0.0.1", "https://login-app-frontend-6axl.onrender.com"],
   credentials: true,
   exposedHeaders: ["set-cookie"],
 };
@@ -29,7 +30,7 @@ app.use(
 );
 
 app.use("/api/auth", authRoutes);
-
+app.use("/api/posts", postsRoutes);
 app.use(errorHandler);
 
 dbConnection();

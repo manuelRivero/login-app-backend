@@ -38,7 +38,7 @@ export const register = {
         ref: "email",
       });
     }
-   
+
     try {
       const salt = bcript.genSaltSync();
       const newUser = new User({
@@ -46,7 +46,7 @@ export const register = {
         lastName,
         email,
       });
-      
+
       if (files && files.image) {
         try {
           const imageUrl = await cloudinary.uploader.upload(
@@ -84,7 +84,9 @@ export const login = {
   },
   do: async (req, res, next) => {
     const { email, password } = req.body;
-    const targetUser = await User.findOne({ email });
+    const targetUser = await User.findOne({ email }).select(
+      "email name lastName avatar password"
+    );
     if (!targetUser) {
       return res.status(404).json({
         ok: false,
@@ -101,6 +103,12 @@ export const login = {
     res.status(200).json({
       ok: true,
       token,
+      user: {
+        avatar:targetUser.avatar,
+        email: targetUser.email,
+        lastName: targetUser.lastName,
+        name: targetUser.name,
+      },
     });
   },
 };
